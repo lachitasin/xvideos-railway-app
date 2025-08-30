@@ -15,12 +15,9 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to eserver application." });
 });
-
-// load user routes
 require("./api/routes/user.routes")(app);
 
-// set port (Railway provides PORT env variable)
-const PORT = process.env.PORT || 3456;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+// set port, listen for requests
+app.listen(3456, () => {
+  console.log("Server is running on port 3456.");
 });
