@@ -1,22 +1,26 @@
-const express = require('express');
-const xvideos = require('@rodrigogs/xvideos');
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.get('/fresh', async (req, res) => {
-  try {
-    const fresh = await xvideos.videos.fresh({ page: 1 });
-    res.json({
-      currentPage: fresh.pagination.current,
-      videos: fresh.videos
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch videos' });
-  }
+// parse requests of content-type: application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type: application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to eserver application." });
 });
 
+// load user routes
+require("./api/routes/user.routes")(app);
+
+// set port (Railway provides PORT env variable)
+const PORT = process.env.PORT || 3456;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}.`);
 });
